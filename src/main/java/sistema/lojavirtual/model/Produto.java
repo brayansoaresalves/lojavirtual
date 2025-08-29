@@ -31,7 +31,7 @@ public class Produto implements Serializable {
 	private String nome;
 	
 	@Column(nullable = false)
-	private Boolean ativo;
+	private Boolean ativo = Boolean.TRUE;
 
 	@Column(nullable = false, columnDefinition = "text")
 	private String descricao;
