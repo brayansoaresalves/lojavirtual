@@ -1,6 +1,5 @@
 package sistema.lojavirtual.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Usuario implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
 	private Long id;
-	
+		
 	@Column(nullable = false)
 	private String login;
 	
