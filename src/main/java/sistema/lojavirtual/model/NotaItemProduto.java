@@ -3,6 +3,7 @@ package sistema.lojavirtual.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -38,6 +39,7 @@ public class NotaItemProduto implements Serializable {
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 	
+	@Column(nullable = false)
 	private BigDecimal quantidade = BigDecimal.ZERO;
 
 }

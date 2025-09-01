@@ -33,10 +33,8 @@ public class Cupom implements Serializable {
 	@Column(nullable = false)
 	private String codigoDesconto;
 	
-	@Column(nullable = false)
 	private BigDecimal valorReal;
 	
-	@Column(nullable = false)
 	private BigDecimal ValorPercentagem;
 	
 	@Temporal(TemporalType.DATE)

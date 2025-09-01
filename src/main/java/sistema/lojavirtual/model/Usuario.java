@@ -46,6 +46,7 @@ public class Usuario implements UserDetails {
 	@Column(nullable = false)
 	private String senha;
 	
+	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataAtualSenha;
 	

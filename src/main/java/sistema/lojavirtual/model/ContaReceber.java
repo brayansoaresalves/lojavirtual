@@ -49,7 +49,6 @@ public class ContaReceber implements Serializable {
 	private Date dataVencimento;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(nullable = false)
 	private Date dataPagamento;
 	
 	@Column(nullable = false)

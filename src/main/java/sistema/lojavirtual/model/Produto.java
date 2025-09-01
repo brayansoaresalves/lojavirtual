@@ -56,13 +56,10 @@ public class Produto implements Serializable {
 	@Column(nullable = false)
 	private Integer quantidadeEstoque = 0;
 
-	@Column(nullable = false)
 	private Integer quantidadeAlertaEstoque = 0;
 	
-	@Column(nullable = false)
 	private String linkYoutube;
 
-	@Column(nullable = false)
 	private Boolean alertaQuantidadeEstoque = Boolean.FALSE;
 
 	private Integer quantidadeCliques = 0;

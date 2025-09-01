@@ -1,7 +1,6 @@
 package sistema.lojavirtual.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -31,9 +30,10 @@ public class AvaliacaoProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_avaliacao_produto")
 	private Long id;
 	
-	@Column(columnDefinition = "text")
+	@Column(columnDefinition = "text", nullable = false)
 	private String descricao;
 	
+	@Column(nullable = false)
 	private Integer nota = 0;
 	
 	@ManyToOne(targetEntity = Pessoa.class)
