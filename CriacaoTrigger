@@ -1,0 +1,30 @@
+create or replace function validaChavePessoa() 
+returns trigger LANGUAGE plpgsql
+as 
+$$
+declare existe integer;
+
+BEGIN
+	existe = (select count(1) from pessoa_fisica where id = new.pessoa_id);
+    if (existe <= 0) then 
+    	existe = (select count(1) from pessoa_juridica where id = new.pessoa_id);
+    if (existe <= 0) then 
+    	raise EXCEPTION 'Não foi encontrado o ID ou PK dda pessoa para realizar a associação do cadastro';
+    end if;
+    end if;
+    return new;
+end;
+$$
+
+
+create trigger validaChavePessoaAtualizacaoVen
+before update 
+on venda_loja
+for each row 
+execute procedure validaChavePessoa();
+
+create trigger validaChavePessoaInsercaoVen
+before insert
+on venda_loja
+for each row 
+execute procedure validaChavePessoa();
