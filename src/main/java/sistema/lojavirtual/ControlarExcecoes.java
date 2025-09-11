@@ -1,4 +1,4 @@
-package sistema.lojavirtual.controller;
+package sistema.lojavirtual;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,6 +22,16 @@ import sistema.lojavirtual.model.dto.ObjetoErroDTO;
 @RestControllerAdvice
 @ControllerAdvice
 public class ControlarExcecoes extends ResponseEntityExceptionHandler{
+	
+	@ExceptionHandler({ExceptionMentoria.class})
+	public ResponseEntity<Object> handleExceptionCustom(ExceptionMentoria ex){
+		ObjetoErroDTO dto = new ObjetoErroDTO();
+		dto.setError(ex.getMessage());
+		dto.setCode(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<Object>(dto, HttpStatus.OK);
+		
+	}
 	
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
 	@Override

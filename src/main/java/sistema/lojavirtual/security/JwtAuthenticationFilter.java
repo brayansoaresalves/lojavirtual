@@ -26,23 +26,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		String authHeader = request.getHeader("Authorization");
 		
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			String token = authHeader.substring(7);
-			String username = jwtUtil.extractUsername(token);
+		try {
+			String authHeader = request.getHeader("Authorization");
 			
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-				var userDetails = implementacaoUserDetailsService.loadUserByUsername(username);
+			if (authHeader != null && authHeader.startsWith("Bearer ")) {
+				String token = authHeader.substring(7);
+				String username = jwtUtil.extractUsername(token);
 				
-				if (jwtUtil.isTokenValid(token)) {
-					var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-					SecurityContextHolder.getContext().setAuthentication(auth);
+				if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+					var userDetails = implementacaoUserDetailsService.loadUserByUsername(username);
+					
+					if (jwtUtil.isTokenValid(token)) {
+						var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+						SecurityContextHolder.getContext().setAuthentication(auth);
+					}
 				}
 			}
+			
+			filterChain.doFilter(request, response);
+			
+		}catch (Exception e) {
+			response.getWriter().write("Ocorreu um erro no sistema, avise o administrador: \n" + e.getMessage());
 		}
 		
-		filterChain.doFilter(request, response);
 		
 	}
 
