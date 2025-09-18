@@ -1,0 +1,1 @@
+insert into acesso (id, descricao) values (1, 'ROLE_USER');
