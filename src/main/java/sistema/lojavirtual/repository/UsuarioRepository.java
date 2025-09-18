@@ -15,7 +15,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query(value = "select u from Usuario u where u.login = ?1")
 	Usuario findUserByLogin(String login);
 
-	@Query("select u from Usuario u where u.pessoa.id = ?1or u.login = ?2")
+	@Query("select u from Usuario u where u.pessoa.id = ?1 or u.login = ?2")
 	Usuario findUserByPessoa(Long id, String email);
 
 	@Query(value = "select constraint_name from information_schema.constraint_column_usage "

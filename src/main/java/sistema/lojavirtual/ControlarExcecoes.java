@@ -33,7 +33,7 @@ public class ControlarExcecoes extends ResponseEntityExceptionHandler{
 		
 	}
 	
-	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
+	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatusCode status, WebRequest request) {
