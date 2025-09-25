@@ -33,9 +33,11 @@ public class JwtUtil {
 	
 	public boolean isTokenValid(String token) {
 		try {
+			System.out.println("Validando token: " + token);
 			Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
 			return true;
 		}catch (JwtException e) {
+			System.out.println("Erro no token: " + e.getMessage());
 			return false;
 		}
 	}
