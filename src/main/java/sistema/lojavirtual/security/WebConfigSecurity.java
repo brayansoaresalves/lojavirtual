@@ -27,20 +27,29 @@ public class WebConfigSecurity {
 	@Autowired
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 	
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> 
-		auth.requestMatchers(HttpMethod.POST, "/salvarPj/**").permitAll().
-		requestMatchers("/acessos/**").permitAll().anyRequest().authenticated())
-		.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
-	}
-	
-	@Bean
-	UserDetailsService userDetailsService() {
-		return implementacaoUserDetailsService;
-	}
-	
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            // Desabilita CSRF para APIs stateless
+            .csrf(csrf -> csrf.disable())
+
+            // Configura quais URLs são públicas e quais exigem autenticação
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/login").permitAll()                  // login público
+                .requestMatchers(HttpMethod.POST, "/salvarPj/**").authenticated() // precisa de token
+                .requestMatchers(HttpMethod.POST, "/acessos/**").authenticated()// precisa de token
+                .anyRequest().authenticated()                             // todo o resto exige autenticação
+            )
+
+            // Política de sessão stateless (sem sessão)
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // Adiciona o filtro JWT antes do filtro padrão de autenticação do Spring
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+            .build();
+    }
+
 	@Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

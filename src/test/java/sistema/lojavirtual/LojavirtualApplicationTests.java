@@ -21,7 +21,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import junit.framework.TestCase;
 import sistema.lojavirtual.controller.AcessoController;
 import sistema.lojavirtual.model.Acesso;
 import sistema.lojavirtual.repository.AcessoRepository;
@@ -30,7 +29,7 @@ import sistema.lojavirtual.repository.AcessoRepository;
 class LojavirtualApplicationTests {
 
 	@Profile("test")
-	public class LojaVirtualMentoriaApplicationTests extends TestCase {
+	public class LojaVirtualMentoriaApplicationTests {
 		
 
 

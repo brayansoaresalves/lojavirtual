@@ -5,9 +5,7 @@ import java.util.Calendar;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import sistema.lojavirtual.controller.PessoaController;
 import sistema.lojavirtual.model.PessoaJuridica;
@@ -32,15 +30,15 @@ public class TestePessoaUsuario {
 		
 		PessoaJuridica pessoaJuridica = new PessoaJuridica();
 		pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
-		pessoaJuridica.setRazao("Empresa teste");
-		pessoaJuridica.setEmail("empresa@gmail.com");
-		pessoaJuridica.setFantasia("Fantasia empresa");
+		pessoaJuridica.setRazao("Administrador");
+		pessoaJuridica.setEmail("brayan.iub10@gmail.com");
+		pessoaJuridica.setFantasia("Administrador");
 		pessoaJuridica.setInscricaoEstadual("12345435");
 		pessoaJuridica.setInscricaoMunicipal("1231545");
-		pessoaJuridica.setNome("Nome empresa");
-		pessoaJuridica.setCategoria("Empresa");
-		pessoaJuridica.setTelefone("2121312313");
-		pessoaJuridica.setTipoPessoa("Juridica");
+		pessoaJuridica.setNome("Administrador");
+		pessoaJuridica.setCategoria("Admin");
+		pessoaJuridica.setTelefone("64992794687");
+		pessoaJuridica.setTipoPessoa("Fisica");
 
 		pessoaController.salvarPJ(pessoaJuridica);
 	

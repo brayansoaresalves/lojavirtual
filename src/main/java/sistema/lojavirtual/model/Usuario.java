@@ -1,5 +1,6 @@
 package sistema.lojavirtual.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public class Usuario implements UserDetails {
 	unique = false, foreignKey = @ForeignKey(name = "usuario_fk", value = ConstraintMode.CONSTRAINT)), 
 	inverseJoinColumns = @JoinColumn(name = "acesso_id", referencedColumnName = "id", table = "acesso", unique = false, 
 	foreignKey = @ForeignKey(name = "acesso_fk", value = ConstraintMode.CONSTRAINT)))
-	private List<Acesso> acessos;
+	private List<Acesso> acessos = new ArrayList<>();
 	
 
 	@Override

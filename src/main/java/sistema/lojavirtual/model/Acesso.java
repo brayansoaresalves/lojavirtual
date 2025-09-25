@@ -32,7 +32,7 @@ public class Acesso implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		
-		return this.descricao;
+		return (this.descricao != null) ? this.descricao.toUpperCase() : "";
 	}
 
 }

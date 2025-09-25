@@ -56,7 +56,7 @@ public class PessoaUserService {
 			usuarioPj.setPessoa(juridica);
 			usuarioPj.setLogin(juridica.getEmail());
 			
-			String senha = "" + Calendar.getInstance().getTimeInMillis();
+			String senha = "123456";
 			String senhaCriptografada = new BCryptPasswordEncoder().encode(senha);
 			
 			usuarioPj.setSenha(senhaCriptografada);
