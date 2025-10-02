@@ -38,8 +38,6 @@ public class PessoaUserService {
 	
 	public PessoaJuridica salvarPessoaJurdica(PessoaJuridica juridica) {
 		
-		juridica = pessoaRepository.save(juridica);
-		
 		for (int i = 0; i<juridica.getEnderecos().size(); i++) {
 			juridica.getEnderecos().get(i).setPessoa(juridica);
 			juridica.getEnderecos().get(i).setEmpresa(juridica);
@@ -71,8 +69,8 @@ public class PessoaUserService {
 			
 			StringBuilder mensagemHtml = new StringBuilder();
 			mensagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b>");
-			mensagemHtml.append("<b>Login: </b>"+juridica.getEmail()+"</b><br/>");
-			mensagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
+			mensagemHtml.append("<b>Login: </b>"+juridica.getEmail()+"<br/>");
+			mensagemHtml.append("<b>Senha: </b>").append(senha).append("<br/>");
 			mensagemHtml.append("Obrigado!");
 
 			
