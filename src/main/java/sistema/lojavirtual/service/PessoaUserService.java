@@ -66,6 +66,7 @@ public class PessoaUserService {
 			usuarioPj = usuarioRepository.save(usuarioPj);
 			
 			usuarioRepository.insereAcessoUserPj(usuarioPj.getId());
+			//usuarioRepository.insereAcessoUserPj(usuarioPj.getId(), "ROLE_ADMIN"); FORMA DINAMICA
 			
 			StringBuilder mensagemHtml = new StringBuilder();
 			mensagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b>");
