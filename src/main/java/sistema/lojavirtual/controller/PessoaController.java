@@ -11,6 +11,7 @@ import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.PessoaJuridica;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.service.PessoaUserService;
+import sistema.lojavirtual.util.ValidaCNPJ;
 
 @RestController
 public class PessoaController {
@@ -21,6 +22,7 @@ public class PessoaController {
 	@Autowired
 	private PessoaUserService pessoaUserService;
 	
+	
 	@PostMapping("/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionMentoria{
 		
@@ -30,6 +32,10 @@ public class PessoaController {
 		
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()).isPresent()) {
 			throw new ExceptionMentoria("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
+		}
+		
+		if (!ValidaCNPJ.isCNPJ(pessoaJuridica.getCnpj())) {
+			throw new ExceptionMentoria("CNPJ : " + pessoaJuridica.getCnpj() + " está inválido");
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJurdica(pessoaJuridica);
