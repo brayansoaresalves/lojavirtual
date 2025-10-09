@@ -6,7 +6,7 @@ public class ValidaCPF {
 
 	public static boolean isCPF(String CPF) {
 		
-		CPF = CPF.replace("\\.", "").replace("\\-", "");
+		CPF = CPF.replaceAll("\\.", "").replaceAll("\\-", "");
 		// considera-se erro CPF"s formados por uma sequencia de numeros iguais
 		if (CPF.equals("00000000000") || CPF.equals("11111111111") || CPF.equals("22222222222")
 				|| CPF.equals("33333333333") || CPF.equals("44444444444") || CPF.equals("55555555555")
