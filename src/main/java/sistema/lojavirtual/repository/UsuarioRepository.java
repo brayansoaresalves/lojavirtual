@@ -1,5 +1,7 @@
 package sistema.lojavirtual.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	@Query(value = "select u from Usuario u where u.login = ?1")
 	Usuario findUserByLogin(String login);
+	
+	@Query(value = "select * from usuario where data_atual_senha <= current_date - interval '90 day'", nativeQuery = true)
+	List<Usuario> usuarioSenhaVencida();
 
 	@Query("select u from Usuario u where u.pessoa.id = ?1 or u.login = ?2")
 	Usuario findUserByPessoa(Long id, String email);
