@@ -3,13 +3,17 @@ package sistema.lojavirtual.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.PessoaFisica;
 import sistema.lojavirtual.model.PessoaJuridica;
+import sistema.lojavirtual.model.dto.CepDTO;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.service.PessoaUserService;
 import sistema.lojavirtual.util.ValidaCNPJ;
@@ -24,9 +28,14 @@ public class PessoaController {
 	@Autowired
 	private PessoaUserService pessoaUserService;
 	
+	@GetMapping("/consultaCep/{cep}")
+	public ResponseEntity<CepDTO> consultaCep(@PathVariable String cep){
+		return ResponseEntity.ok(pessoaUserService.consultaCep(cep));
+	}
+	
 	
 	@PostMapping("/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionMentoria{
+	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionMentoria{
 		
 		if (pessoaJuridica == null) {
 			throw new ExceptionMentoria("Pessoa Juridica não pode ser nula");
@@ -40,13 +49,17 @@ public class PessoaController {
 			throw new ExceptionMentoria("CNPJ : " + pessoaJuridica.getCnpj() + " está inválido");
 		}
 		
+		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
+			pessoaJuridica.getEnderecos()
+		}
+		
 		pessoaJuridica = pessoaUserService.salvarPessoaJurdica(pessoaJuridica);
 		
 		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
 	}
 	
 	@PostMapping("/salvarPf")
-	public ResponseEntity<PessoaFisica> salvarPF(@RequestBody PessoaFisica pessoaFisica) throws ExceptionMentoria{
+	public ResponseEntity<PessoaFisica> salvarPF(@RequestBody @Valid PessoaFisica pessoaFisica) throws ExceptionMentoria{
 		
 		if (pessoaFisica == null) {
 			throw new ExceptionMentoria("Pessoa Fisica não pode ser nula");

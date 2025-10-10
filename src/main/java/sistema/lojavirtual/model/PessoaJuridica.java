@@ -1,5 +1,7 @@
 package sistema.lojavirtual.model;
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -12,6 +14,7 @@ public class PessoaJuridica extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
 	
+	@CNPJ(message = "CNPJ está invalido")
 	@Column(nullable = false)
 	private String cnpj;
 	

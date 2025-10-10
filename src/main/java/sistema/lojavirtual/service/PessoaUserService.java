@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import sistema.lojavirtual.model.PessoaFisica;
 import sistema.lojavirtual.model.PessoaJuridica;
 import sistema.lojavirtual.model.Usuario;
+import sistema.lojavirtual.model.dto.CepDTO;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.repository.UsuarioRepository;
 import sistema.lojavirtual.security.JwtUtil;
@@ -138,6 +140,10 @@ public PessoaFisica salvarPessoaFisica(PessoaFisica fisica) {
 		
 		return fisica;
 		
+	}
+
+	public CepDTO consultaCep(String cep) {
+		return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
 	}
 	
 

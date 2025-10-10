@@ -19,6 +19,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,9 +41,12 @@ public abstract class Pessoa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
 	private Long id;
 	
+	@Size(min = 3, max = 60, message = "Nome não deve ser menor que {2} e nem maior que {1}")
+	@NotBlank(message = "Nome deve ser informado")
 	@Column(nullable = false)
 	private String nome;
 	
+	@Email
 	@Column(nullable = false)
 	private String email;
 	
