@@ -50,7 +50,7 @@ public class PessoaController {
 		}
 		
 		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
-			pessoaJuridica.getEnderecos()
+			pessoaJuridica.getEnderecos();
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJurdica(pessoaJuridica);
