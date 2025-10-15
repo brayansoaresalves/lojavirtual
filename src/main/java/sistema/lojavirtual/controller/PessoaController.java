@@ -1,5 +1,7 @@
 package sistema.lojavirtual.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import sistema.lojavirtual.ExceptionMentoria;
+import sistema.lojavirtual.model.Endereco;
 import sistema.lojavirtual.model.PessoaFisica;
 import sistema.lojavirtual.model.PessoaJuridica;
 import sistema.lojavirtual.model.dto.CepDTO;
+import sistema.lojavirtual.repository.EnderecoRepository;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.service.PessoaUserService;
 import sistema.lojavirtual.util.ValidaCNPJ;
@@ -27,6 +31,10 @@ public class PessoaController {
 	
 	@Autowired
 	private PessoaUserService pessoaUserService;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+
 	
 	@GetMapping("/consultaCep/{cep}")
 	public ResponseEntity<CepDTO> consultaCep(@PathVariable String cep){
@@ -50,7 +58,28 @@ public class PessoaController {
 		}
 		
 		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
-			pessoaJuridica.getEnderecos();
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+				pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+				pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+				pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+				pessoaJuridica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+				pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+			}
+		} else {
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+				Optional<Endereco> enderecoFiltrado = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId());
+				if (!enderecoFiltrado.isEmpty()) {
+					if (!enderecoFiltrado.get().getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())) {
+						CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+						pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+						pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+						pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+						pessoaJuridica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+						pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+					}
+				}
+			}
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJurdica(pessoaJuridica);
