@@ -1,5 +1,6 @@
 package sistema.lojavirtual.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,9 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 	
 	@Query("select pf from PessoaFisica pf where pf.cpf = ?1")
 	Optional<PessoaFisica> existeCpfCadastrado(String cpf);
+	
+	List<PessoaFisica> findByNomeContainingIgnoreCase(String nome);
+	
+	List<PessoaJuridica> findByRazaoContainingIgnoreCase(String razao);
 
 }

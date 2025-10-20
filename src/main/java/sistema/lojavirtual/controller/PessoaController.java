@@ -1,5 +1,6 @@
 package sistema.lojavirtual.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,19 @@ public class PessoaController {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@GetMapping("/consultaPFNome/{nome}")
+	public ResponseEntity<List<PessoaFisica>> consultaPFNome(@PathVariable String nome){
+		List<PessoaFisica> fisicas = pessoaRepository.findByNomeContainingIgnoreCase(nome.toUpperCase());
+		return ResponseEntity.ok(fisicas);
+	}
+	
+	@GetMapping("/consultarRazao/{razao}")
+	public ResponseEntity<List<PessoaJuridica>> consultarRazao(@PathVariable String razao){
+		List<PessoaJuridica> juridicas = pessoaRepository.findByRazaoContainingIgnoreCase(razao.toUpperCase());
+		return ResponseEntity.ok(juridicas);
+		
+	}
 
 	
 	@GetMapping("/consultaCep/{cep}")
