@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +18,12 @@ import sistema.lojavirtual.model.Endereco;
 import sistema.lojavirtual.model.PessoaFisica;
 import sistema.lojavirtual.model.PessoaJuridica;
 import sistema.lojavirtual.model.dto.CepDTO;
+import sistema.lojavirtual.model.dto.ConsultaCnpjDTO;
+import sistema.lojavirtual.model.enums.TipoPessoa;
 import sistema.lojavirtual.repository.EnderecoRepository;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.service.PessoaUserService;
+import sistema.lojavirtual.service.ServiceContagemAcessoAPI;
 import sistema.lojavirtual.util.ValidaCNPJ;
 import sistema.lojavirtual.util.ValidaCPF;
 
@@ -38,21 +40,20 @@ public class PessoaController {
 	private EnderecoRepository enderecoRepository;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private ServiceContagemAcessoAPI serviceContagemAcessoAPI;
+	
 	
 	@GetMapping("/consultaPFNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> consultaPFNome(@PathVariable String nome){
 		List<PessoaFisica> fisicas = pessoaRepository.findByNomeContainingIgnoreCase(nome.toUpperCase());
-		jdbcTemplate.execute("begin; update tabela_acesso_end_point set qtd_acesso_end_point = qtd_acesso_end_point + 1"
-				+ "where nome = 'END-POINT-NOME-PESSOA-FISICA'; commit;");
+		serviceContagemAcessoAPI.atualizaAcessoEndPointPessoaFisica();
 		return ResponseEntity.ok(fisicas);
 	}
 	
 	@GetMapping("/consultarRazao/{razao}")
 	public ResponseEntity<List<PessoaJuridica>> consultarRazao(@PathVariable String razao){
 		List<PessoaJuridica> juridicas = pessoaRepository.findByRazaoContainingIgnoreCase(razao.toUpperCase());		
-		jdbcTemplate.execute("begin; update tabela_acesso_end_point set qtd_acesso_end_point = qtd_acesso_end_point + 1"
-				+ "where nome = 'END-POINT-RAZAP-PESSOA-JURIDICA'; commit;");
+		serviceContagemAcessoAPI.atualizaAcessoEndPointPessoaJuridica();
 		return ResponseEntity.ok(juridicas);
 		
 	}
@@ -63,12 +64,20 @@ public class PessoaController {
 		return ResponseEntity.ok(pessoaUserService.consultaCep(cep));
 	}
 	
+	@GetMapping("/consultaCnpjReceitaWs/{cnpj}")
+	public ResponseEntity<ConsultaCnpjDTO> consultaCnpjReceitaWs(@PathVariable String cnpj){
+		return ResponseEntity.ok(pessoaUserService.consultaCnpjReceitaWS(cnpj));
+	}
 	
 	@PostMapping("/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionMentoria{
 		
 		if (pessoaJuridica == null) {
 			throw new ExceptionMentoria("Pessoa Juridica não pode ser nula");
+		}
+		
+		if (pessoaJuridica.getTipoPessoa() == null) {
+			throw new ExceptionMentoria("Informe o tipo Jurídico ou Fornecedor da Loja");
 		}
 		
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()).isPresent()) {
@@ -114,6 +123,10 @@ public class PessoaController {
 		
 		if (pessoaFisica == null) {
 			throw new ExceptionMentoria("Pessoa Fisica não pode ser nula");
+		}
+		
+		if (pessoaFisica.getTipoPessoa() == null) {
+			pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.getDescricao());
 		}
 		
 		if (pessoaFisica.getId() == null && pessoaRepository.existeCpfCadastrado(pessoaFisica.getCpf()).isPresent()) {

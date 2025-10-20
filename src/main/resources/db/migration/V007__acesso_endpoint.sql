@@ -10,3 +10,5 @@ values ('END-POINT-NOME-PESSOA-FISICA', 0);
 
 insert into tabela_acesso_end_point (nome, qtd_acesso_end_point) 
 values ('END-POINT-RAZAP-PESSOA-JURIDICA', 0);
+
+alter table tabela_acesso_end_point add constraint nome_end_point_unique unique(nome);

@@ -33,6 +33,7 @@ public class WebConfigSecurity {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/consultaCep/**").permitAll()// login público
+                .requestMatchers(HttpMethod.GET, "/consultaCnpjReceitaWs/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/salvarPj/**").permitAll() // precisa de token
                 .requestMatchers(HttpMethod.POST, "/salvarPf/**").permitAll() 
                 .requestMatchers(HttpMethod.POST, "/acessos/**").authenticated()// precisa de token
