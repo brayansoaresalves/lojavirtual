@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,15 +37,22 @@ public class PessoaController {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	@GetMapping("/consultaPFNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> consultaPFNome(@PathVariable String nome){
 		List<PessoaFisica> fisicas = pessoaRepository.findByNomeContainingIgnoreCase(nome.toUpperCase());
+		jdbcTemplate.execute("begin; update tabela_acesso_end_point set qtd_acesso_end_point = qtd_acesso_end_point + 1"
+				+ "where nome = 'END-POINT-NOME-PESSOA-FISICA'; commit;");
 		return ResponseEntity.ok(fisicas);
 	}
 	
 	@GetMapping("/consultarRazao/{razao}")
 	public ResponseEntity<List<PessoaJuridica>> consultarRazao(@PathVariable String razao){
-		List<PessoaJuridica> juridicas = pessoaRepository.findByRazaoContainingIgnoreCase(razao.toUpperCase());
+		List<PessoaJuridica> juridicas = pessoaRepository.findByRazaoContainingIgnoreCase(razao.toUpperCase());		
+		jdbcTemplate.execute("begin; update tabela_acesso_end_point set qtd_acesso_end_point = qtd_acesso_end_point + 1"
+				+ "where nome = 'END-POINT-RAZAP-PESSOA-JURIDICA'; commit;");
 		return ResponseEntity.ok(juridicas);
 		
 	}
