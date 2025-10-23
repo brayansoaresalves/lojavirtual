@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import sistema.lojavirtual.ExceptionMentoria;
+import sistema.lojavirtual.model.CategoriaProduto;
+import sistema.lojavirtual.model.MarcaProduto;
 import sistema.lojavirtual.model.Pessoa;
 import sistema.lojavirtual.model.Produto;
+import sistema.lojavirtual.repository.CategoriaProdutoRepository;
+import sistema.lojavirtual.repository.MarcaProdutoRepository;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.repository.ProdutoRepository;
 
@@ -22,6 +26,12 @@ public class ProdutoService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@Autowired
+	private MarcaProdutoRepository marcaProdutoRepository;
+	
+	@Autowired
+	private CategoriaProdutoRepository categoriaProdutoRepository;
+	
 	@Transactional
 	public Produto registrarProduto(Produto produto) throws ExceptionMentoria {
 		
@@ -33,6 +43,17 @@ public class ProdutoService {
 		
 		if (empresaFiltrada.isEmpty()) {
 			throw new ExceptionMentoria("Não existe empresa cadastrada com o código " + produto.getEmpresa().getId());
+		}
+		
+		Optional<MarcaProduto> marcaProdutoExistente = marcaProdutoRepository.findById(produto.getMarcaProduto().getId());
+		Optional<CategoriaProduto> categoriaOptional = categoriaProdutoRepository.findById(produto.getCategoriaProduto().getId());
+		
+		if (marcaProdutoExistente.isEmpty()) {
+			throw new ExceptionMentoria("Não existe marca cadastrada com o código " + produto.getMarcaProduto().getId());
+		}
+		
+		if (categoriaOptional.isEmpty()) {
+			throw new ExceptionMentoria("Não existe categoria cadastrada com o código " + produto.getCategoriaProduto().getId());
 		}
 		
 		return produtoRepository.save(produto);
@@ -54,6 +75,11 @@ public class ProdutoService {
 		}catch (DataIntegrityViolationException e) {
 			throw new ExceptionMentoria("Não é possivel excluir um produto vinculado. Verifique");
 		}
+	}
+	
+	public Produto buscarPorCodigo(Long codigoProduto) throws ExceptionMentoria {
+		return produtoRepository.findById(codigoProduto).orElseThrow(
+				() -> new ExceptionMentoria("Nao existe produto com o código " + codigoProduto));
 	}
 
 }
