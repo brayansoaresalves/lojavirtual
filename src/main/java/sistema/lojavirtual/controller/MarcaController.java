@@ -23,7 +23,7 @@ import sistema.lojavirtual.service.MarcaProdutoService;
 
 @RestController
 @RequestMapping("/marcas")
-public class MarcaRepository {
+public class MarcaController {
 	
 	@Autowired
 	private MarcaProdutoService marcaProdutoService;

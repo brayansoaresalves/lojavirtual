@@ -2,10 +2,10 @@ package sistema.lojavirtual.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
 import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.MarcaProduto;
 import sistema.lojavirtual.model.Pessoa;
@@ -13,11 +13,12 @@ import sistema.lojavirtual.repository.MarcaProdutoRepository;
 import sistema.lojavirtual.repository.PessoaRepository;
 
 @Service
-@RequiredArgsConstructor
 public class MarcaProdutoService {
 	
+	@Autowired
 	private MarcaProdutoRepository marcaProdutoRepository;
 	
+	@Autowired
 	private PessoaRepository pessoaRepository;
 	
 	@Transactional

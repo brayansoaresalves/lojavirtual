@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.Endereco;
+import sistema.lojavirtual.model.Pessoa;
 import sistema.lojavirtual.model.PessoaFisica;
 import sistema.lojavirtual.model.PessoaJuridica;
 import sistema.lojavirtual.model.dto.CepDTO;
@@ -43,6 +44,11 @@ public class PessoaController {
 	
 	@Autowired
 	private ServiceContagemAcessoAPI serviceContagemAcessoAPI;
+	
+	@GetMapping
+	public ResponseEntity<List<Pessoa>> buscarPessoasJuridicas() {
+		return ResponseEntity.ok(pessoaRepository.findAll());
+	}
 	
 	
 	@GetMapping("/consultaPFNome/{nome}")
