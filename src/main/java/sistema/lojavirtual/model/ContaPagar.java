@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -18,6 +20,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,20 +41,26 @@ public class ContaPagar implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
 	private Long id;
 	
+	@NotBlank(message = "Informar uma descrição")
 	@Column(nullable = false)
 	private String descricao;
 	
+	@NotNull(message = "Informe o status")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private StatusConta status;
 	
+	@JsonFormat(pattern =  "dd/MM/yyyy")
+	@NotNull(message = "Informe a data de vencimento da contas a pagar")
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Date dataVencimento;
 	
+	@JsonFormat(pattern =  "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataPagamento;
 	
+	@NotNull(message = "Informe o valor total do contas a pagar")
 	@Column(nullable = false)
 	private BigDecimal valorTotal;
 	

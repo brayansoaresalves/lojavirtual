@@ -1,6 +1,7 @@
 package sistema.lojavirtual.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,44 @@ public class EmissaoContaPagarService {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Transactional
+	public ContaPagar registrarConta(ContaPagar contaPagar) throws ExceptionMentoria {
+	
+		
+		boolean existeEmpresa = existePessoa(contaPagar.getEmpresa().getId());
+		if (!existeEmpresa) {
+			throw new ExceptionMentoria("Não existe empresa cadastrada com o código " + 
+		contaPagar.getEmpresa().getId());
+		}
+		
+		boolean temPessoa = existePessoa(contaPagar.getPessoa().getId());
+		
+		if (!temPessoa) {
+			throw new ExceptionMentoria("Não existe pessoa cadastrada com o código " + 
+		contaPagar.getPessoa().getId());
+		}
+		
+		boolean temFornecedor = existePessoa(contaPagar.getPessoaFornecedora().getId());
+		
+		if (!temFornecedor) {
+			throw new ExceptionMentoria("Não exixte fornecedor cadastrado com o código " 
+		+ contaPagar.getPessoaFornecedora().getId());
+		}
+		
+		boolean existeDescricoes = contaPagarRepository.existsByDescricaoContainingIgnoreCaseAndEmpresaIdAndPessoaIdAndPessoaFornecedoraId(
+				contaPagar.getDescricao(), contaPagar.getEmpresa().getId(), 
+						contaPagar.getPessoa().getId(), contaPagar.getPessoaFornecedora().getId());
+		
+		if (contaPagar.getId() == null) {
+			if (existeDescricoes) {
+				throw new ExceptionMentoria("Não é possivel salvar documentos a pagar com a mesma descrição.");
+			}
+		}
+		
+		return contaPagarRepository.save(contaPagar);
+		
+	}
 	
 	public List<ContaPagar> buscarPorDescricao(String descricao){
 		return contaPagarRepository.findByDescricaoContainingIgnoreCase(descricao);

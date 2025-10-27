@@ -17,5 +17,7 @@ public interface ContaPagarRepository extends JpaRepository<ContaPagar, Long> {
 	List<ContaPagar> findByPessoaFornecedoraId(Long pessoaFornecedoraId);
 	
 	List<ContaPagar> findByEmpresaId(Long empresaId);
+	
+	boolean existsByDescricaoContainingIgnoreCaseAndEmpresaIdAndPessoaIdAndPessoaFornecedoraId(String descricao, Long empresaId, Long pessoaId, Long fornecedorId);
 
 }
