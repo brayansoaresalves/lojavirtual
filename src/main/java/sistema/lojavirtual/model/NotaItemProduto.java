@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,19 +32,23 @@ public class NotaItemProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_item_produto")
 	private Long id;
 	
+	@NotNull(message = "Necessário informar a nota")
 	@ManyToOne
 	@JoinColumn(name = "nota_fiscal_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_fk"))
 	private NotaFiscalCompra notaFiscalCompra;
 	
+	@NotNull(message = "Necessario informar o produto")
 	@ManyToOne(targetEntity = Produto.class)
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 	
+	@NotNull(message = "Necessário informar a quantidade")
 	@Column(nullable = false)
 	private BigDecimal quantidade = BigDecimal.ZERO;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Necessário informar a empresa")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 
 }

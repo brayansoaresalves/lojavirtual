@@ -18,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -49,14 +50,14 @@ public class NotaFiscalCompra implements Serializable {
 	
 	private String observacao;
 	
-	@Size(min = 1, message = "Valor Total deve ser superior a 0")
+	@DecimalMin("0.00")
 	@NotNull(message = "Necessario informar o valor total")
 	@Column(nullable = false)
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	private BigDecimal desconto = BigDecimal.ZERO;
 
-	@Size(min = 1, message = "Valor Total deve ser superior a 0")
+	@DecimalMin("0.00")
 	@NotNull(message = "Informar o valor de ICMS")
 	@Column(nullable = false)
 	private BigDecimal valorIcms = BigDecimal.ZERO;

@@ -1,0 +1,1 @@
+alter table produto drop column nota_item_id;

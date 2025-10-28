@@ -37,7 +37,8 @@ public class WebConfigSecurity {
                 .requestMatchers("/marcas/**").permitAll()
                 .requestMatchers("/contas/**").permitAll()
                 .requestMatchers("/notas/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/produtos/**").permitAll()
+                .requestMatchers("/itens/**").permitAll()
+                .requestMatchers("/produtos/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/acessos/**").authenticated()// precisa de token
                 .anyRequest().authenticated()                             // todo o resto exige autenticação
             )
