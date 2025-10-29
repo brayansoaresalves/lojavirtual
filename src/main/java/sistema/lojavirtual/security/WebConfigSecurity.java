@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfigSecurity {
 	
 	@Autowired
@@ -33,7 +31,7 @@ public class WebConfigSecurity {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/pessoas/**").permitAll()// login público
-                .requestMatchers(HttpMethod.POST, "/categorias/**").permitAll()
+                .requestMatchers("/categorias/**").permitAll()
                 .requestMatchers("/marcas/**").permitAll()
                 .requestMatchers("/contas/**").permitAll()
                 .requestMatchers("/notas/**").permitAll()

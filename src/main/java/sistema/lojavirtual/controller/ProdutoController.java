@@ -1,5 +1,6 @@
 package sistema.lojavirtual.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.Produto;
@@ -42,7 +44,7 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto) throws ExceptionMentoria{
+	public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto) throws ExceptionMentoria, UnsupportedEncodingException, MessagingException{
 		
 		Produto produtoSalvo = produtoService.registrarProduto(produto);
 		
@@ -51,7 +53,7 @@ public class ProdutoController {
 	
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Produto> editarProduto(@RequestBody @Valid Produto produto, @PathVariable Long codigo) 
-			throws ExceptionMentoria{
+			throws ExceptionMentoria, UnsupportedEncodingException, MessagingException{
 		
 		Produto produtoFiltrado = produtoService.buscarPorCodigo(codigo);
 		

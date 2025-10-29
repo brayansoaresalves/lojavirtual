@@ -2,16 +2,21 @@ package sistema.lojavirtual.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -93,12 +98,20 @@ public class Produto implements Serializable {
 	@JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
 	name = "categoria_produto_fk"))
 	private CategoriaProduto categoriaProduto;
-	
 
 	@NotNull(message = "A marca deve ser informada")
 	@ManyToOne(targetEntity = MarcaProduto.class)
 	@JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
 	name = "marca_produto_fk"))
 	private MarcaProduto marcaProduto;
+	
+	@NotNull(message = "A lista de fotos é obrigatória.")
+    @Size(min = 3, max = 6, message = "Obrigatório ter entre {min} e {max} fotos.")
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<ImagemProduto> imagens = new ArrayList<>();
+	
+	public boolean isNovo() {
+		return this.getId() == null;
+	}
 
 }
