@@ -32,6 +32,9 @@ public class ProdutoService {
 	@Autowired
 	private CategoriaProdutoRepository categoriaProdutoRepository;
 	
+	@Autowired
+	private ServiceSendEmail serviceSendEmail;
+	
 	@Transactional
 	public Produto registrarProduto(Produto produto) throws ExceptionMentoria {
 		
@@ -56,7 +59,15 @@ public class ProdutoService {
 			throw new ExceptionMentoria("Não existe categoria cadastrada com o código " + produto.getCategoriaProduto().getId());
 		}
 		
-		return produtoRepository.save(produto);
+		produto = produtoRepository.save(produto);
+		
+		if (produto.getAlertaQuantidadeEstoque() && produto.getQuantidadeEstoque() <= 5) {
+			StringBuilder html = new StringBuilder();
+			html.append("<h2>").append("Produto: " + produto.getNome()).append(" com estoque baixo: " + produto.getQuantidadeEstoque() + "</h2>");
+			html.append("<p> Id Produto.:").append(produto.getId()).append("</p>");
+		}
+		
+		return produto;
 	}
 	
 	@Transactional

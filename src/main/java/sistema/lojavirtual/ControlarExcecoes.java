@@ -65,7 +65,7 @@ public class ControlarExcecoes extends ResponseEntityExceptionHandler{
 		
 		objetoErroDTO.setError(msg);
 		objetoErroDTO.setCode(status.value() + "==> " + HttpStatus.valueOf(status.value()).getReasonPhrase());
-		ex.printStackTrace();
+		/*ex.printStackTrace();
 		
 		try {
 			serviceSendEmail.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "brayan.iub10@gmail.com");
@@ -74,7 +74,7 @@ public class ControlarExcecoes extends ResponseEntityExceptionHandler{
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);

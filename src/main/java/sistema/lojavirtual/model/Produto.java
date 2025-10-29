@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -42,6 +43,7 @@ public class Produto implements Serializable {
 	@Column(nullable = false)
 	private Boolean ativo = Boolean.TRUE;
 
+	@Size(max = 2000, message = "Descrição não pode ser maior que 2000 caracteres")
 	@NotBlank(message = "Descrição do produto deve ser informado")
 	@Column(nullable = false, columnDefinition = "text")
 	private String descricao;
@@ -68,6 +70,7 @@ public class Produto implements Serializable {
 	@Column(nullable = false)
 	private BigDecimal valorVenda = BigDecimal.ZERO;
 	
+	@Min(value = 1, message = "A quantidade em estoque deve ser maior que 0")
 	@NotNull(message = "A quantidade deve ser informada")
 	@Column(nullable = false)
 	private Integer quantidadeEstoque = 0;
