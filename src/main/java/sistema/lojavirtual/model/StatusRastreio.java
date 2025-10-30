@@ -31,6 +31,7 @@ public class StatusRastreio implements Serializable {
 	
 	private String centroDistribuicao;
 	
+	
 	private String cidade;
 	
 	private String estado;
@@ -42,8 +43,8 @@ public class StatusRastreio implements Serializable {
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_loja_fk"))
 	private VendaLoja vendaLoja;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 
 }

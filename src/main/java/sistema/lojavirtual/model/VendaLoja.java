@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -17,6 +20,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,33 +42,42 @@ public class VendaLoja  implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_venda_loja")
 	private Long id;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Por favor informe um cliente")
+	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private Pessoa pessoa;
+	private PessoaFisica pessoa;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Por favor informar uma empresa")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 	
-	@ManyToOne
+	@NotNull(message = "Informar um endereço de entrega")
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_entrega_id", nullable = false, 
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
 	private Endereco enderecoEntrega;
 	
-	@ManyToOne
+	@NotNull(message = "Informar um endereço de cobrança")
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_cobranca_id", nullable = false, 
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_cobranca_fk"))
 	private Endereco enderecoCobranca;
 	
+	@NotNull(message = "O valorTotal não pode ser nulo.")
+	@Positive(message = "O valor deve ser positivo e não pode ser zero.")
+	@Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 10 dígitos inteiros e 2 casas decimais.")
 	@Column(nullable = false)
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	private BigDecimal desconto = BigDecimal.ZERO;
 	
+	@NotNull(message = "Informar uma forma de pagamento")
 	@ManyToOne
 	@JoinColumn(name = "forma_pagamento_id", nullable = false, 
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "forma_pagamento_id"))
 	private FormaPagamento formaPagamento;
+	
 	
 	@OneToOne
 	@JoinColumn(name = "nota_fiscal_venda_id", nullable = false, 
@@ -76,16 +92,18 @@ public class VendaLoja  implements Serializable {
 	@Column(nullable = false)
 	private BigDecimal valorFrete = BigDecimal.ZERO;
 	
-
 	@Column(nullable = false)
 	private Integer diasEntrega;
 	
-
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@NotNull(message = "Informar a data da venda")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataVenda;
 	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataEntrega;
+	
 
 }
