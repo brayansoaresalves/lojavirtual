@@ -24,7 +24,7 @@ public class PessoaFisica extends Pessoa {
 	@Column(nullable = false)
 	private String cpf;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 

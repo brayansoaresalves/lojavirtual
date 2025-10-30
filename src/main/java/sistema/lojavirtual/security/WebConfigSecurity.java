@@ -30,13 +30,15 @@ public class WebConfigSecurity {
             // Configura quais URLs são públicas e quais exigem autenticação
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/pessoas/**").permitAll()// login público
+                .requestMatchers("/pessoas/**").permitAll()// login público
                 .requestMatchers("/categorias/**").permitAll()
                 .requestMatchers("/marcas/**").permitAll()
                 .requestMatchers("/contas/**").permitAll()
                 .requestMatchers("/notas/**").permitAll()
                 .requestMatchers("/itens/**").permitAll()
                 .requestMatchers("/produtos/**").permitAll()
+                .requestMatchers("/imagens/**").permitAll()
+                .requestMatchers("/avaliacoes/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/acessos/**").authenticated()// precisa de token
                 .anyRequest().authenticated()                             // todo o resto exige autenticação
             )

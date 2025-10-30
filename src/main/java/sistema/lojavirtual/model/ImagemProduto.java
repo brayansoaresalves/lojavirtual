@@ -3,6 +3,7 @@ package sistema.lojavirtual.model;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -38,12 +39,12 @@ public class ImagemProduto implements Serializable {
 	@Column(nullable = false, columnDefinition = "text")
 	private String imagemMiniatura;
 	
-	@JsonIgnore
+	@JsonIgnoreProperties(allowGetters = true)
 	@ManyToOne(targetEntity = Produto.class)
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 	
-	@JsonIgnore
+	@JsonIgnoreProperties(allowGetters = true)
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private PessoaJuridica empresa;
