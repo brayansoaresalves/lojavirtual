@@ -2,6 +2,8 @@ package sistema.lojavirtual.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -48,10 +50,11 @@ public class NotaFiscalVenda  implements Serializable {
 	@Column(columnDefinition = "text", nullable = false)
 	private String pdf;
 	
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "venda_loja_id", nullable = false, 
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_loja_fk"))
-	private VendaLoja vendaLoja;
+	private VendaLoja vendaLoja = new VendaLoja();
 	
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))

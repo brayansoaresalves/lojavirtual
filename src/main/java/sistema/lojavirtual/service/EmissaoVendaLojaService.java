@@ -11,6 +11,7 @@ import sistema.lojavirtual.model.Pessoa;
 import sistema.lojavirtual.model.VendaLoja;
 import sistema.lojavirtual.repository.CupomRepository;
 import sistema.lojavirtual.repository.FormaPagamentoRepository;
+import sistema.lojavirtual.repository.NotaFiscalVendaRepository;
 import sistema.lojavirtual.repository.PessoaRepository;
 import sistema.lojavirtual.repository.VendaLojaRepository;
 
@@ -22,6 +23,7 @@ public class EmissaoVendaLojaService {
 	private final PessoaRepository pessoaRepository;
 	private final FormaPagamentoRepository formaPagamentoRepository;
 	private final CupomRepository cupomRepository;
+	private final NotaFiscalVendaRepository notaFiscalVendaRepository;
 	
 	@Transactional
 	public VendaLoja emitir(VendaLoja venda) throws ExceptionMentoria {
@@ -40,7 +42,11 @@ public class EmissaoVendaLojaService {
 					.orElseThrow(() -> new ExceptionMentoria("Cupom não localizado"));
 		}
 		
-		return venda = vendaLojaRepository.saveAndFlush(venda);
+		venda.getNotaFiscalVenda().setEmpresa(venda.getEmpresa());
+		venda.getNotaFiscalVenda().setVendaLoja(venda);
+		venda = vendaLojaRepository.saveAndFlush(venda);
+
+		return venda;
 		
 		
 	}

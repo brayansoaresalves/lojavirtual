@@ -1,0 +1,1 @@
+alter table venda_loja alter column nota_fiscal_venda_id drop not null;
