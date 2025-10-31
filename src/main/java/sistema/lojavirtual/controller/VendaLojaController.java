@@ -14,6 +14,7 @@ import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.Endereco;
 import sistema.lojavirtual.model.VendaLoja;
 import sistema.lojavirtual.model.dto.CepDTO;
+import sistema.lojavirtual.model.dto.VendaLojaDTO;
 import sistema.lojavirtual.repository.VendaLojaRepository;
 import sistema.lojavirtual.service.EmissaoVendaLojaService;
 import sistema.lojavirtual.service.PessoaUserService;
@@ -37,7 +38,7 @@ public class VendaLojaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<VendaLoja> emitir(@RequestBody @Valid VendaLoja venda) throws ExceptionMentoria {
+	public ResponseEntity<VendaLojaDTO> emitir(@RequestBody @Valid VendaLoja venda) throws ExceptionMentoria {
 		CepDTO cepDTO = pessoaUserService.consultaCep(venda.getEnderecoEntrega().getCep());
 		venda.setEnderecoEntrega(montarEndereco(cepDTO, venda.getEnderecoEntrega()));
 		
@@ -52,7 +53,15 @@ public class VendaLojaController {
 		
 		
 		venda = emissaoVendaLojaService.emitir(venda);
-		return ResponseEntity.ok(venda);
+		VendaLojaDTO vendaLojaDTO = new VendaLojaDTO();
+		vendaLojaDTO.setValorTotal(venda.getValorTotal());
+		vendaLojaDTO.setPessoa(venda.getPessoa());
+		vendaLojaDTO.setCobranca(venda.getEnderecoCobranca());
+		vendaLojaDTO.setEntrega(venda.getEnderecoEntrega());
+		vendaLojaDTO.setValorDesconto(venda.getDesconto());
+		vendaLojaDTO.setValorFrete(venda.getValorFrete());
+		vendaLojaDTO.setDiasEntrega(venda.getDiasEntrega());
+		return ResponseEntity.ok(vendaLojaDTO);
 	}
 	
 	private Endereco montarEndereco(CepDTO cepDTO, Endereco endereco) {
