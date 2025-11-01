@@ -1,5 +1,9 @@
 package sistema.lojavirtual.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +21,14 @@ import sistema.lojavirtual.model.dto.CepDTO;
 import sistema.lojavirtual.model.dto.VendaLojaDTO;
 import sistema.lojavirtual.repository.VendaLojaRepository;
 import sistema.lojavirtual.service.EmissaoVendaLojaService;
+import sistema.lojavirtual.service.ModelMapperConfig;
 import sistema.lojavirtual.service.PessoaUserService;
 
 @RestController
 @RequestMapping("/vendas")
 public class VendaLojaController {
+
+    private final AcessoController acessoController;
 	
 	@Autowired
 	private VendaLojaRepository vendaLojaRepository;
@@ -31,6 +38,35 @@ public class VendaLojaController {
 	
 	@Autowired
 	private EmissaoVendaLojaService emissaoVendaLojaService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+
+    VendaLojaController(AcessoController acessoController) {
+        this.acessoController = acessoController;
+    }
+	
+	@GetMapping
+	public ResponseEntity<List<VendaLojaDTO>> buscar(){
+		List<VendaLoja> vendas = vendaLojaRepository.findAll();
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class)).collect(Collectors.toList()));
+		
+	}
+	
+	@GetMapping("/{vendaid}")
+	public ResponseEntity<VendaLojaDTO> consultarVendaId(@PathVariable Long vendaId) throws ExceptionMentoria {
+		VendaLoja venda = vendaLojaRepository.findById(vendaId).orElseThrow(() -> new ExceptionMentoria("Venda não encontrada"));
+		VendaLojaDTO vendaLojaDTO = new VendaLojaDTO();
+		vendaLojaDTO.setValorTotal(venda.getValorTotal());
+		vendaLojaDTO.setPessoa(venda.getPessoa());
+		vendaLojaDTO.setCobranca(venda.getEnderecoCobranca());
+		vendaLojaDTO.setEntrega(venda.getEnderecoEntrega());
+		vendaLojaDTO.setValorDesconto(venda.getDesconto());
+		vendaLojaDTO.setValorFrete(venda.getValorFrete());
+		vendaLojaDTO.setDiasEntrega(venda.getDiasEntrega());
+		vendaLojaDTO.setId(venda.getId());
+		return ResponseEntity.ok(vendaLojaDTO);
+	}
 	
 	@GetMapping("/consultaCep/{cep}")
 	public ResponseEntity<CepDTO> consultaCep(@PathVariable String cep){
@@ -61,6 +97,7 @@ public class VendaLojaController {
 		vendaLojaDTO.setValorDesconto(venda.getDesconto());
 		vendaLojaDTO.setValorFrete(venda.getValorFrete());
 		vendaLojaDTO.setDiasEntrega(venda.getDiasEntrega());
+		vendaLojaDTO.setId(venda.getId());
 		return ResponseEntity.ok(vendaLojaDTO);
 	}
 	

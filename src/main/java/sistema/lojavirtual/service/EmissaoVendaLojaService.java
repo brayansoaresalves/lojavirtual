@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import sistema.lojavirtual.ExceptionMentoria;
 import sistema.lojavirtual.model.Cupom;
 import sistema.lojavirtual.model.FormaPagamento;
+import sistema.lojavirtual.model.ItemVendaLoja;
 import sistema.lojavirtual.model.Pessoa;
 import sistema.lojavirtual.model.VendaLoja;
 import sistema.lojavirtual.repository.CupomRepository;
@@ -44,6 +45,12 @@ public class EmissaoVendaLojaService {
 		
 		venda.getNotaFiscalVenda().setEmpresa(venda.getEmpresa());
 		venda.getNotaFiscalVenda().setVendaLoja(venda);
+		
+		for (ItemVendaLoja item : venda.getItens()) {
+			item.setEmpresa(venda.getEmpresa());
+			item.setVendaLoja(venda);
+		}
+		
 		venda = vendaLojaRepository.saveAndFlush(venda);
 
 		return venda;

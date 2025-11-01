@@ -2,6 +2,8 @@ package sistema.lojavirtual.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -44,16 +46,19 @@ public class AvaliacaoProduto implements Serializable {
 	@Column(nullable = false)
 	private Integer nota = 0;
 	
+	@JsonIgnore
 	@NotNull(message = "Necessário informar o cliente")
 	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private PessoaFisica pessoa;
 	
+	@JsonIgnore
 	@NotNull(message = "Por favor informe a empresa")
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private PessoaJuridica empresa;
 	
+	@JsonIgnore
 	@NotNull(message = "Por favor informe o produto para avaliação")
 	@ManyToOne(targetEntity = Produto.class)
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
