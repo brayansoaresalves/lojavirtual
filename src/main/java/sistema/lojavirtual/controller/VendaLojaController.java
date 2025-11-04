@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,14 +23,11 @@ import sistema.lojavirtual.model.dto.CepDTO;
 import sistema.lojavirtual.model.dto.VendaLojaDTO;
 import sistema.lojavirtual.repository.VendaLojaRepository;
 import sistema.lojavirtual.service.EmissaoVendaLojaService;
-import sistema.lojavirtual.service.ModelMapperConfig;
 import sistema.lojavirtual.service.PessoaUserService;
 
 @RestController
 @RequestMapping("/vendas")
 public class VendaLojaController {
-
-    private final AcessoController acessoController;
 	
 	@Autowired
 	private VendaLojaRepository vendaLojaRepository;
@@ -41,10 +40,6 @@ public class VendaLojaController {
 	
 	@Autowired
 	private ModelMapper modelMapper;
-
-    VendaLojaController(AcessoController acessoController) {
-        this.acessoController = acessoController;
-    }
 	
 	@GetMapping
 	public ResponseEntity<List<VendaLojaDTO>> buscar(){
@@ -99,6 +94,12 @@ public class VendaLojaController {
 		vendaLojaDTO.setDiasEntrega(venda.getDiasEntrega());
 		vendaLojaDTO.setId(venda.getId());
 		return ResponseEntity.ok(vendaLojaDTO);
+	}
+	
+	@DeleteMapping("/{vendaId}")
+	public ResponseEntity<?> deletandoVenda(@PathVariable Long vendaId) throws ExceptionMentoria{
+		emissaoVendaLojaService.removerVendaEAssociacao(vendaId);
+		return new ResponseEntity<String>("Venda Excluida com sucesso.", HttpStatus.NO_CONTENT);
 	}
 	
 	private Endereco montarEndereco(CepDTO cepDTO, Endereco endereco) {

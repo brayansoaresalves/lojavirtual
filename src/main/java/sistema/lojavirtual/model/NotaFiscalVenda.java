@@ -52,7 +52,7 @@ public class NotaFiscalVenda  implements Serializable {
 	
 	@JsonIgnore
 	@OneToOne
-	@JoinColumn(name = "venda_loja_id", nullable = false, 
+	@JoinColumn(name = "venda_loja_id", nullable = true, 
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_loja_fk"))
 	private VendaLoja vendaLoja = new VendaLoja();
 	
