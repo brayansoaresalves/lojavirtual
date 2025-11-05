@@ -44,23 +44,44 @@ public class VendaLojaController {
 	@GetMapping
 	public ResponseEntity<List<VendaLojaDTO>> buscar(){
 		List<VendaLoja> vendas = vendaLojaRepository.findAll();
-		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class)).collect(Collectors.toList()));
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
+				.collect(Collectors.toList()));
 		
 	}
 	
-	@GetMapping("/{vendaid}")
+	@GetMapping("/produto/{produtoId}")
+	public ResponseEntity<List<VendaLojaDTO>> buscarPorProduto(@PathVariable Long produtoId){
+		List<VendaLoja> vendas = vendaLojaRepository.findDistinctByItensProdutoIdAndExcluidoFalse(produtoId);
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
+				.collect(Collectors.toList()));
+		
+	}
+	
+	@GetMapping("/produto/porNome/{nome}")
+	public ResponseEntity<List<VendaLojaDTO>> buscarPorProdutoPorNome(@PathVariable String nome){
+		List<VendaLoja> vendas = vendaLojaRepository.findDistinctByItensProdutoNomeContainingIgnoreCaseAndExcluidoFalse(nome);
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
+				.collect(Collectors.toList()));
+		
+	}
+	
+	@GetMapping("/cliente/{clienteId}")
+	public ResponseEntity<List<VendaLojaDTO>> buscarPorCliente(@PathVariable Long clienteId){
+		List<VendaLoja> vendas = vendaLojaRepository.findByPessoaIdAndExcluidoFalse(clienteId);
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
+				.collect(Collectors.toList()));
+		
+	}
+	
+	@GetMapping("/{vendaId}")
 	public ResponseEntity<VendaLojaDTO> consultarVendaId(@PathVariable Long vendaId) throws ExceptionMentoria {
-		VendaLoja venda = vendaLojaRepository.findById(vendaId).orElseThrow(() -> new ExceptionMentoria("Venda não encontrada"));
-		VendaLojaDTO vendaLojaDTO = new VendaLojaDTO();
-		vendaLojaDTO.setValorTotal(venda.getValorTotal());
-		vendaLojaDTO.setPessoa(venda.getPessoa());
-		vendaLojaDTO.setCobranca(venda.getEnderecoCobranca());
-		vendaLojaDTO.setEntrega(venda.getEnderecoEntrega());
-		vendaLojaDTO.setValorDesconto(venda.getDesconto());
-		vendaLojaDTO.setValorFrete(venda.getValorFrete());
-		vendaLojaDTO.setDiasEntrega(venda.getDiasEntrega());
-		vendaLojaDTO.setId(venda.getId());
-		return ResponseEntity.ok(vendaLojaDTO);
+		VendaLoja venda = vendaLojaRepository.findByIdAndExcluidoFalse(vendaId);
+		
+		if (venda == null) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok(modelMapper.map(venda, VendaLojaDTO.class));
 	}
 	
 	@GetMapping("/consultaCep/{cep}")
@@ -100,6 +121,18 @@ public class VendaLojaController {
 	public ResponseEntity<?> deletandoVenda(@PathVariable Long vendaId) throws ExceptionMentoria{
 		emissaoVendaLojaService.removerVendaEAssociacao(vendaId);
 		return new ResponseEntity<String>("Venda Excluida com sucesso.", HttpStatus.NO_CONTENT);
+	}
+	
+	@DeleteMapping("/excluir/{vendaId}")
+	public ResponseEntity<?> excluindoVendaLogicamente(@PathVariable Long vendaId) throws ExceptionMentoria{
+		emissaoVendaLojaService.exclusaoTotalVenda(vendaId);
+		return new ResponseEntity<String>("Venda Excluida com sucesso.", HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping("/ativar/{vendaId}")
+	public ResponseEntity<?> voltarVenda(@PathVariable Long vendaId) throws ExceptionMentoria{
+		emissaoVendaLojaService.retornarVenda(vendaId);
+		return new ResponseEntity<String>("Venda Retornada com sucesso.", HttpStatus.OK);
 	}
 	
 	private Endereco montarEndereco(CepDTO cepDTO, Endereco endereco) {

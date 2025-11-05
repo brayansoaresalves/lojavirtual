@@ -87,6 +87,16 @@ public class EmissaoVendaLojaService {
 		
 	}
 	
+	public void exclusaoTotalVenda(Long vendaId) {
+		String sql = "update venda_loja set excluido = true where id = '"+vendaId+"'";
+		jdbcTemplate.execute(sql);
+	}
+	
+	public void retornarVenda(Long vendaId) {
+		String sql = "update venda_loja set excluido = false where id = '"+vendaId+"'";
+		jdbcTemplate.execute(sql);
+	}
+	
 	
 
 }
