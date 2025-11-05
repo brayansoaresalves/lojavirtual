@@ -1,5 +1,8 @@
 package sistema.lojavirtual.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,12 +44,24 @@ public class VendaLojaController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	private static final SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+	
 	@GetMapping
 	public ResponseEntity<List<VendaLojaDTO>> buscar(){
 		List<VendaLoja> vendas = vendaLojaRepository.findAll();
 		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
 				.collect(Collectors.toList()));
 		
+	}
+	
+	@GetMapping("/periodo/{dataInicial}/{dataFinal}")
+	public ResponseEntity<List<VendaLojaDTO>> buscarPorPeriodo(@PathVariable String dataInicial, @PathVariable String dataFinal) throws ParseException{
+		Date inicio = formatador.parse(dataInicial);
+		Date dataFim = formatador.parse(dataFinal);
+		
+		List<VendaLoja> vendas = vendaLojaRepository.findByDataVendaBetweenAndExcluidoFalse(inicio, dataFim);
+		return ResponseEntity.ok(vendas.stream().map(venda -> modelMapper.map(venda, VendaLojaDTO.class))
+				.collect(Collectors.toList()));
 	}
 	
 	@GetMapping("/produto/{produtoId}")
